@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+</style>
+
+<body>
+    <div>
+        <input id="inputSearch" type="text">
+        <button id="btnSearch">Search</button>
+        <div id="container">
+            <!-- <img id="userImg" src="" alt="">
+            <div>
+                <a id="userName"><a>
+            </div>
+            <h4 id="userRepo"></h4> -->
+        </div>
+    </div>
+</body>
+<script>
+    const btnSearch = document.querySelector("#btnSearch");
+    const inputSearch = document.querySelector("#inputSearch");
+    const container = document.querySelector("#container");
+   
+    window.onload=()=>{
+        inputSearch.focus();
+    }
+    const arrData = [];
+    window.addEventListener("keydown", (e) => {
+        if (e.code === "Enter") {
+            getData();
+        }
+        else{
+            console.log(e.code);
+        }
+    });
+    btnSearch.addEventListener("click", () => {
+
+        getData();
+    });
+    async function getData() {
+        if (inputSearch.value === "") {
+            alert("please Enter User");
+        }
+        else {
+            const res = await fetch(`https://api.github.com/users/${inputSearch.value}`).then()
+            if (res.ok) {
+                const data = await res.json();
+                console.log(arrData);
+                const divInContainer = document.createElement("div");
+               
+                // divInContainer.addEventListener("click",(event)=>{
+                //     console.log(event.target);
+                // });
+                const img = document.createElement("img");
+                const div = document.createElement("div");
+                const a = document.createElement("a");
+                const h4 = document.createElement("h4");
+                img.src = data.avatar_url;
+                divInContainer.appendChild(img);
+                a.innerHTML = data.login;
+                a.href = data.html_url;
+                a.target = "_blank"
+                div.appendChild(a);
+                divInContainer.appendChild(div);
+                h4.innerHTML = data.public_repos;
+                divInContainer.appendChild(h4);
+                container.appendChild(divInContainer);
+
+                console.log(data);
+                inputSearch.value = "";
+            }
+            else {
+                console.log(new Error("User Not Found"));
+            }
+        }
+
+    }
+</script>
+
+</html>
